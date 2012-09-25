@@ -39,7 +39,7 @@ public class AppInfoActivity extends Activity {
         super.onResume();
         Intent intent = getIntent();
         AccountManager accountManager = AccountManager.get(getApplicationContext());
-        Account account = (Account) intent.getExtras().get(AccountListActivity.intentAccountKey);
+        Account account = (Account) intent.getExtras().get(GetGoogleAppsAccountActivity.intentAccountKey);
         accountManager.getAuthToken(account, "oauth2:https://www.googleapis.com/auth/userinfo.email", false, new GetAuthTokenCallback(), null);
     }
     

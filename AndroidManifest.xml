@@ -23,12 +23,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountListActivity"
-            android:label="Account List" >
-        </activity>
-        <activity
-            android:name=".AppInfoActivity"
-            android:label="App Info" >
+            android:name=".PostListActivity"
+            android:label="Posts" >
         </activity>
     </application>
 

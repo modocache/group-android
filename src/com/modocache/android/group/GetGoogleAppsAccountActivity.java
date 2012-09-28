@@ -2,6 +2,9 @@ package com.modocache.android.group;
 
 import java.util.ArrayList;
 
+import com.modocache.android.group.api.GroupAPIAuthenticationCallback;
+import com.modocache.android.group.api.GroupAPIEngine;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -51,9 +54,13 @@ public class GetGoogleAppsAccountActivity extends Activity {
     private void promptForAccountWithSuffix(String domainSuffix) {
         Account appsAccount = getGoogleAppsAccount(domainSuffix);
         if (appsAccount != null) {
-            Intent intent = new Intent(this, AppInfoActivity.class);
-            intent.putExtra(intentAccountKey, appsAccount);
-            startActivity(intent);
+            GroupAPIEngine.getSharedEngine().authenticateAccount(this, appsAccount, new GroupAPIAuthenticationCallback() {
+                @Override
+                public void onAuthenticationComplete(Boolean result) {
+                    Intent intent = new Intent(getBaseContext(), PostListActivity.class);
+                    startActivity(intent);
+                }
+            });
         } else if (addAccountIntent == null) {
             String toastText = String.format(getString(R.string.add_account_toast),
                                              domainSuffix);

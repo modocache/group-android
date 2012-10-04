@@ -6,14 +6,14 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.modocache.android.group.api.GroupAPICallback;
 import com.modocache.android.group.api.GroupAPIEngine;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-public class PostListActivity extends Activity {
+public class PostListActivity extends SherlockActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

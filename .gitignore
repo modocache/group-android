@@ -18,6 +18,7 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+lint.xml
 
 # Environment variables
 env_strings.xml

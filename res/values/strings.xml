@@ -2,4 +2,7 @@
     <string name="app_name">Group</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="add_account_toast">Please create a Google Apps account for the domain "%1$s".</string>
+
+    <string name="menu_item_title_posts">Posts</string>
+    <string name="menu_item_title_users">Users</string>
 </resources>

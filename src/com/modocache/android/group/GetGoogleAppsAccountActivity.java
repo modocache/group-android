@@ -57,7 +57,8 @@ public class GetGoogleAppsAccountActivity extends Activity {
             GroupAPIEngine.getSharedEngine().authenticateAccount(this, appsAccount, new GroupAPIAuthenticationCallback() {
                 @Override
                 public void onAuthenticationComplete(Boolean result) {
-                    Intent intent = new Intent(getBaseContext(), PostListActivity.class);
+                    Intent intent = new Intent(getBaseContext(), GroupMainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
             });

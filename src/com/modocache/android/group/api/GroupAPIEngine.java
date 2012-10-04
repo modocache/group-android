@@ -1,13 +1,17 @@
 package com.modocache.android.group.api;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
+import org.json.JSONArray;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -23,7 +27,14 @@ import android.util.Log;
 
 public class GroupAPIEngine {
 
+    public interface GroupAPIEngineDelegate {
+        public void onEngineDidLoadPosts(Post[] posts);
+        public void onEngineDidLoadUsers(User[] users);
+        public void onEngineError(Error error);
+    }
+
     private static GroupAPIEngine sharedEngine;
+    private GroupAPIEngineDelegate delegate;
     private String apiHost;
     private String apiPort;
     private Activity currentActivity;
@@ -45,6 +56,10 @@ public class GroupAPIEngine {
             }
         }
         return sharedEngine;
+    }
+    
+    public void setDelegate(GroupAPIEngineDelegate delegate) {
+        this.delegate = delegate;
     }
 
     public void setEnvironment(Environment environment) {
@@ -147,35 +162,93 @@ public class GroupAPIEngine {
         }
     }
 
-    public void fetchPosts(GroupAPICallback callback) {
-        RequestTask task = new RequestTask();
-        task.setCallback(callback);
-        task.execute(getHostURL() + "/posts.json");
+    public void fetchPosts() {
+        new ReadPostsTask().execute(getHostURL() + "/posts.json");
     }
 
-    private class RequestTask extends AsyncTask<String, Void, Void> {
-        private GroupAPICallback callback;
-        public void setCallback(GroupAPICallback callback) {
-            this.callback = callback;
+    private class ReadPostsTask extends AsyncTask<String, Post, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            return readJSONFeed(urls[0]);
         }
 
         @Override
-        protected Void doInBackground(String... urlStrings) {
+        protected void onPostExecute(String result) {
             try {
-                HttpGet httpGet = new HttpGet(urlStrings[0]);
-                HttpResponse httpResponse = GroupHTTPClient.getSharedClient().execute(httpGet);
-                this.callback.onResponse(httpResponse);
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+                JSONArray jsonArray = new JSONArray(result);
+                Post[] posts = new Post[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Post post = new Post(jsonArray.getJSONObject(i));
+                    posts[i] = post;
+                }
+
+                if (delegate != null) {
+                    delegate.onEngineDidLoadPosts(posts);
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+        }
+    }
+
+    public void fetchUsers() {
+        new ReadUsersTask().execute(getHostURL() + "/users.json");
+    }
+
+    private class ReadUsersTask extends AsyncTask<String, User, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            return readJSONFeed(urls[0]);
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(String result) {
+            try {
+                JSONArray jsonArray = new JSONArray(result);
+                User[] users = new User[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    User user = new User(jsonArray.getJSONObject(i));
+                    users[i] = user;
+                }
+
+                if (delegate != null) {
+                    delegate.onEngineDidLoadUsers(users);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private String readJSONFeed(String urlString) {
+        StringBuilder stringBuilder = new StringBuilder();
+        HttpGet httpGet = new HttpGet(urlString);
+
+        try {
+            HttpResponse httpResponse = GroupHTTPClient.getSharedClient().execute(httpGet);
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                HttpEntity httpEntity = httpResponse.getEntity();
+                InputStreamReader streamReader = new InputStreamReader(httpEntity.getContent());
+                BufferedReader bufferedReader = new BufferedReader(streamReader);
+
+                String lineString;
+                while ((lineString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(lineString);
+                }
+            } else {
+                Error error = new Error("Could not access resource.");
+                delegate.onEngineError(error);
+            }
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return stringBuilder.toString();
     }
 }

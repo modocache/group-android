@@ -2,11 +2,13 @@ package com.modocache.android.group;
 
 import java.util.ArrayList;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.modocache.android.group.api.Post;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,6 +26,9 @@ public class PostEditActivity extends SherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_edit);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         titleEditText = (EditText) findViewById(R.id.edit_text_title);
         bodyEditText = (EditText) findViewById(R.id.edit_text_body);
@@ -50,6 +55,11 @@ public class PostEditActivity extends SherlockActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+        case android.R.id.home:
+            Intent intent = new Intent(PostEditActivity.this,
+                                       GroupMainActivity.class);
+            startActivity(intent);
+            return true;
         case MENU_SAVE_POST_ITEM_ID:
             ArrayList<String> errors = getValidationErrors();
             if (errors.size() <= 0) {

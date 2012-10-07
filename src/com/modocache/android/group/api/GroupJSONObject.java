@@ -3,6 +3,8 @@ package com.modocache.android.group.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.modocache.android.group.api.GroupPermissions.PermissionType;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -32,6 +34,23 @@ abstract public class GroupJSONObject implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.jsonObject.toString());
+    }
+
+
+    // Public Interface
+    public Boolean can(PermissionType type) {
+        JSONObject permissions = null;
+        try {
+            permissions = this.jsonObject.getJSONObject("permissions");
+        } catch (JSONException e) {
+            return false;
+        }
+
+        try {
+            return permissions.getBoolean(type.toString());
+        } catch (JSONException e) {
+            return false;
+        }
     }
 
 

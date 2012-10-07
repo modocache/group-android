@@ -60,12 +60,12 @@ public class Post extends GroupJSONObject {
     };
 
 
-    // Protected Interface
+    // Private Interface
     private User getUser() {
         try {
             return new User(jsonObject.getJSONObject("user"));
         } catch (JSONException e) {
             return null;
         }
-   }
+    }
 }

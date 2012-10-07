@@ -17,4 +17,6 @@
     <string name="menu_item_title_save_post">Save</string>
     <string name="post_validation_error_no_title">You must enter a title.</string>
     <string name="post_validation_error_no_body">You must enter a body.</string>
+    <string name="title_activity_post_detail">PostDetailActivity</string>
+    <string name="menu_item_title_edit_post">Edit Post</string>
 </resources>

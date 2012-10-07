@@ -5,6 +5,7 @@ import com.modocache.android.group.api.GroupAPIEngine.GroupAPIEngineDelegate;
 import com.modocache.android.group.api.Post;
 import com.modocache.android.group.api.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -34,9 +35,9 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
         super.onListItemClick(l, v, position, id);
         Post post = this.posts[position];
 
-        Toast.makeText(getActivity().getBaseContext(),
-                       post.toString(),
-                       Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+        intent.putExtra(PostDetailActivity.INTENT_POST_KEY, post);
+        startActivity(intent);
     }
 
     @Override

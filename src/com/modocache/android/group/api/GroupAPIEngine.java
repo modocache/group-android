@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -175,10 +176,11 @@ public class GroupAPIEngine {
         @Override
         protected void onPostExecute(String result) {
             try {
-                JSONArray jsonArray = new JSONArray(result);
-                Post[] posts = new Post[jsonArray.length()];
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    Post post = new Post(jsonArray.getJSONObject(i));
+                JSONObject resultObject = new JSONObject(result);
+                JSONArray postsJSONArray = resultObject.getJSONArray("posts");
+                Post[] posts = new Post[postsJSONArray.length()];
+                for (int i = 0; i < postsJSONArray.length(); i++) {
+                    Post post = new Post(postsJSONArray.getJSONObject(i));
                     posts[i] = post;
                 }
 

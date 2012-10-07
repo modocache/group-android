@@ -32,8 +32,10 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        Post post = this.posts[position];
+
         Toast.makeText(getActivity().getBaseContext(),
-                       this.posts[position].toString(),
+                       post.toString(),
                        Toast.LENGTH_SHORT).show();
     }
 

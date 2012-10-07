@@ -26,6 +26,15 @@
             android:name=".GroupMainActivity"
             android:label="GroupMainActivity" >
         </activity>
+        <activity
+            android:name=".PostEditActivity"
+            android:label="@string/title_activity_post_edit" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

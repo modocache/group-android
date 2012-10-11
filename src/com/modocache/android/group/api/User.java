@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class User extends GroupJSONObject {
-    public Integer id;
+    public String id;
     public String email;
 
 
@@ -30,7 +30,7 @@ public class User extends GroupJSONObject {
     // GroupJSONObject Overrides
     @Override
     protected void setJSONObjectValues() {
-        this.id = getIntAttribute("id", 0);
+        this.id = getStringAttribute("id", "");
         this.email = getStringAttribute("email", "");
     }
 

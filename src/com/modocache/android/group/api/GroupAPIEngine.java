@@ -82,6 +82,10 @@ public class GroupAPIEngine {
         return String.format("http://%s:%s", this.apiHost, this.apiPort);
     }
 
+    private String getApiURL() {
+        return String.format("%s/api/v1", getHostURL());
+    }
+
     private String getLoginURL(String token) {
         return String.format("%s/auth/google_apps/android_login?token=%s",
                 getHostURL(), token);
@@ -164,7 +168,7 @@ public class GroupAPIEngine {
     }
 
     public void fetchPosts() {
-        new ReadPostsTask().execute(getHostURL() + "/posts.json");
+        new ReadPostsTask().execute(getApiURL() + "/posts.json");
     }
 
     private class ReadPostsTask extends AsyncTask<String, Post, String> {
@@ -194,7 +198,7 @@ public class GroupAPIEngine {
     }
 
     public void fetchUsers() {
-        new ReadUsersTask().execute(getHostURL() + "/users.json");
+        new ReadUsersTask().execute(getApiURL() + "/users.json");
     }
 
     private class ReadUsersTask extends AsyncTask<String, User, String> {
@@ -206,10 +210,11 @@ public class GroupAPIEngine {
         @Override
         protected void onPostExecute(String result) {
             try {
-                JSONArray jsonArray = new JSONArray(result);
-                User[] users = new User[jsonArray.length()];
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    User user = new User(jsonArray.getJSONObject(i));
+                JSONObject resultObject = new JSONObject(result);
+                JSONArray usersJSONArray = resultObject.getJSONArray("users");
+                User[] users = new User[usersJSONArray.length()];
+                for (int i = 0; i < usersJSONArray.length(); i++) {
+                    User user = new User(usersJSONArray.getJSONObject(i));
                     users[i] = user;
                 }
 

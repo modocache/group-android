@@ -8,7 +8,7 @@ import android.os.Parcelable;
 
 public class Post extends GroupJSONObject {
     public User user;
-    public Integer id;
+    public String id;
     public String title;
     public String body;
     public String created_at;
@@ -36,7 +36,7 @@ public class Post extends GroupJSONObject {
     @Override
     protected void setJSONObjectValues() {
         this.user = getUser();
-        this.id = getIntAttribute("id", 0);
+        this.id = getStringAttribute("id", "");
         this.title = getStringAttribute("title", "");
         this.body = getStringAttribute("body", "");
         this.created_at = getStringAttribute("created_at", "");

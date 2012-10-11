@@ -3,6 +3,7 @@ package com.modocache.android.group.api;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,7 +36,7 @@ public class GroupAPIEngine {
     }
 
     private static GroupAPIEngine sharedEngine;
-    private GroupAPIEngineDelegate delegate;
+    private ArrayList<GroupAPIEngineDelegate> delegates;
     private String apiHost;
     private String apiPort;
     private Activity currentActivity;
@@ -53,14 +54,19 @@ public class GroupAPIEngine {
                 if (sharedEngine == null) {
                     sharedEngine = new GroupAPIEngine();
                     sharedEngine.setEnvironment(Environment.DEVELOPMENT_DEVICE);
+                    sharedEngine.delegates = new ArrayList<GroupAPIEngineDelegate>();
                 }
             }
         }
         return sharedEngine;
     }
     
-    public void setDelegate(GroupAPIEngineDelegate delegate) {
-        this.delegate = delegate;
+    public void addDelegate(GroupAPIEngineDelegate delegate) {
+        this.delegates.add(delegate);
+    }
+
+    public void removeDelegate(GroupAPIEngineDelegate delegate) {
+        this.delegates.remove(delegate);
     }
 
     public void setEnvironment(Environment environment) {
@@ -188,7 +194,7 @@ public class GroupAPIEngine {
                     posts[i] = post;
                 }
 
-                if (delegate != null) {
+                for (GroupAPIEngineDelegate delegate : delegates) {
                     delegate.onEngineDidLoadPosts(posts);
                 }
             } catch (Exception e) {
@@ -218,7 +224,7 @@ public class GroupAPIEngine {
                     users[i] = user;
                 }
 
-                if (delegate != null) {
+                for (GroupAPIEngineDelegate delegate : delegates) {
                     delegate.onEngineDidLoadUsers(users);
                 }
             } catch (Exception e) {
@@ -247,7 +253,9 @@ public class GroupAPIEngine {
                 }
             } else {
                 Error error = new Error("Could not access resource.");
-                delegate.onEngineError(error);
+                for (GroupAPIEngineDelegate delegate : delegates) {
+                    delegate.onEngineError(error);
+                }
             }
 
         } catch (ClientProtocolException e) {

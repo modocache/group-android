@@ -4,8 +4,10 @@
     <string name="add_account_toast">Please create a Google Apps account for the domain "%1$s".</string>
 
     <string name="menu_item_title_new_post">New Post</string>
-    <string name="menu_item_title_posts">Posts</string>
-    <string name="menu_item_title_users">Users</string>
+    <string name="menu_item_title_reload">Refresh</string>
+
+    <string name="tab_title_posts">Posts</string>
+    <string name="tab_title_users">Users</string>
 
     <string name="posts_no_posts">There are no posts to display.</string>
     <string name="users_no_users">There are no users to display.</string>

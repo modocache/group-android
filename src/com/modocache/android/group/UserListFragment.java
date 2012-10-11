@@ -17,16 +17,24 @@ import android.widget.Toast;
 public class UserListFragment extends ListFragment implements GroupAPIEngineDelegate {
     private User[] users;
 
+
+    // android.support.v4.app.ListFragment Overrides
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.user_list_fragment, container, false);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        GroupAPIEngine.getSharedEngine().setDelegate(this);
-        GroupAPIEngine.getSharedEngine().fetchUsers();
+    public void onPause() {
+        super.onPause();
+        GroupAPIEngine.getSharedEngine().removeDelegate(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GroupAPIEngine.getSharedEngine().addDelegate(this);
+        GroupAPIEngine.getSharedEngine().fetchPosts();
     }
 
     @Override
@@ -37,6 +45,8 @@ public class UserListFragment extends ListFragment implements GroupAPIEngineDele
                        Toast.LENGTH_SHORT).show();
     }
 
+
+    // GroupAPIEngineDelegate Interface Methods
     @Override
     public void onEngineError(Error error) {
         Toast.makeText(getActivity().getBaseContext(),

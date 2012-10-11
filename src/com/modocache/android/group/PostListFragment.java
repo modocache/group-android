@@ -18,15 +18,23 @@ import android.widget.Toast;
 public class PostListFragment extends ListFragment implements GroupAPIEngineDelegate {
     private Post[] posts;
 
+
+    // android.support.v4.app.ListFragment Overrides
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.post_list_fragment, container, false);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        GroupAPIEngine.getSharedEngine().setDelegate(this);
+    public void onPause() {
+        super.onPause();
+        GroupAPIEngine.getSharedEngine().removeDelegate(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GroupAPIEngine.getSharedEngine().addDelegate(this);
         GroupAPIEngine.getSharedEngine().fetchPosts();
     }
 
@@ -40,6 +48,8 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
         startActivity(intent);
     }
 
+
+    // GroupAPIEngineDelegate Interface Methods
     @Override
     public void onEngineDidLoadPosts(Post[] posts) {
         this.posts = posts;

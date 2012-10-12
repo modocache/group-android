@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.modocache.android.group.api.GroupAPIEngine;
+import com.modocache.android.group.api.db.DatabaseManager;
 
 public class GroupMainActivity extends SherlockFragmentActivity implements TabListener {
     private static enum MenuGroups { ACTION }
@@ -30,6 +31,8 @@ public class GroupMainActivity extends SherlockFragmentActivity implements TabLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DatabaseManager.init(GroupMainActivity.this);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

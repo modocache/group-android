@@ -2,16 +2,15 @@ package com.modocache.android.group;
 
 import java.util.ArrayList;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.modocache.android.group.api.Post;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class PostEditActivity extends SherlockActivity {
 
@@ -33,11 +32,11 @@ public class PostEditActivity extends SherlockActivity {
         titleEditText = (EditText) findViewById(R.id.edit_text_title);
         bodyEditText = (EditText) findViewById(R.id.edit_text_body);
 
-        Post post = (Post) this.getIntent().getParcelableExtra(INTENT_POST_KEY);
-        if (post != null) {
-            titleEditText.setText(post.title);
-            bodyEditText.setText(post.body);
-        }
+//        Post post = (Post) this.getIntent().getParcelableExtra(INTENT_POST_KEY);
+//        if (post != null) {
+//            titleEditText.setText(post.getTitle());
+//            bodyEditText.setText(post.getBody());
+//        }
     }
 
     @Override

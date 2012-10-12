@@ -22,12 +22,20 @@ public class Post extends BaseModel {
     private String updatedAt;
 
     @DatabaseField(foreign=true, foreignAutoRefresh=true)
-    User user;
+    private User user;
+
+
+    // java.lang.Object Overrides
+    @Override
+    public String toString() {
+        return String.format("%s, by %s", this.getTitle(), this.getUser());
+    }
 
 
     // Public Interface
     public Post() {}
     public Post(JSONObject jsonObject) {
+        super();
         this.uuid = getStringAttribute(jsonObject, "id", "");
         this.title = getStringAttribute(jsonObject, "title", "");
         this.body = getStringAttribute(jsonObject, "body", "");

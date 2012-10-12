@@ -52,9 +52,18 @@ public class DatabaseManager {
     }
 
     public User getUserWithUuid(String uuid) {
+        if (uuid == null || uuid.equalsIgnoreCase("")) {
+            return null;
+        }
+
         User user = null;
         try {
-            user = getDatabaseHelper().getUserDao().queryForEq("uuid", uuid).get(0);
+            List<User> users = getDatabaseHelper().getUserDao().queryForEq("uuid", uuid);
+            if (users.isEmpty()) {
+                return null;
+            } else {
+                return users.get(0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,6 +84,17 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public User addOrUpdateUser(User user) {
+        User persistedUser = getUserWithUuid(user.getUuid());
+        if (persistedUser == null) {
+            addUser(user);
+        } else {
+            updateUser(user);
+        }
+
+        return user;
     }
 
     public List<Post> getAllPosts() {
@@ -98,9 +118,18 @@ public class DatabaseManager {
     }
 
     public Post getPostWithUuid(String uuid) {
+        if (uuid == null || uuid.equalsIgnoreCase("")) {
+            return null;
+        }
+
         Post post = null;
         try {
-            post = getDatabaseHelper().getPostDao().queryForEq("uuid", uuid).get(0);
+            List<Post> posts = getDatabaseHelper().getPostDao().queryForEq("uuid", uuid);
+            if (posts.isEmpty()) {
+                return null;
+            } else {
+                return posts.get(0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -121,5 +150,16 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Post addOrUpdatePost(Post post) {
+        Post persistedPost = getPostWithUuid(post.getUuid());
+        if (persistedPost == null) {
+            addPost(post);
+        } else {
+            updatePost(post);
+        }
+
+        return post;
     }
 }

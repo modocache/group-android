@@ -1,9 +1,6 @@
 package com.modocache.android.group;
 
-import com.modocache.android.group.api.GroupAPIEngine;
-import com.modocache.android.group.api.GroupAPIEngine.GroupAPIEngineDelegate;
-import com.modocache.android.group.api.Post;
-import com.modocache.android.group.api.User;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -14,8 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.modocache.android.group.api.GroupAPIEngine;
+import com.modocache.android.group.api.GroupAPIEngine.GroupAPIEngineDelegate;
+import com.modocache.android.group.api.db.DatabaseManager;
+import com.modocache.android.group.api.models.User;
+
 public class UserListFragment extends ListFragment implements GroupAPIEngineDelegate {
-    private User[] users;
+    private List<User> users;
 
 
     // android.support.v4.app.ListFragment Overrides
@@ -33,6 +35,7 @@ public class UserListFragment extends ListFragment implements GroupAPIEngineDele
     @Override
     public void onResume() {
         super.onResume();
+        onEngineDidLoadUsers();
         GroupAPIEngine.getSharedEngine().addDelegate(this);
         GroupAPIEngine.getSharedEngine().fetchPosts();
     }
@@ -41,7 +44,7 @@ public class UserListFragment extends ListFragment implements GroupAPIEngineDele
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Toast.makeText(getActivity().getBaseContext(),
-                       this.users[position].toString(),
+                       this.users.get(position).toString(),
                        Toast.LENGTH_SHORT).show();
     }
 
@@ -55,13 +58,13 @@ public class UserListFragment extends ListFragment implements GroupAPIEngineDele
     }
 
     @Override
-    public void onEngineDidLoadUsers(User[] users) {
-        this.users = users;
+    public void onEngineDidLoadUsers() {
+        this.users = DatabaseManager.getSharedManager().getAllUsers();
         setListAdapter(new ArrayAdapter<User>(getActivity(),
                                               android.R.layout.simple_list_item_1,
-                                              users));
+                                              this.users));
     }
 
     @Override
-    public void onEngineDidLoadPosts(Post[] posts) {}
+    public void onEngineDidLoadPosts() {}
 }

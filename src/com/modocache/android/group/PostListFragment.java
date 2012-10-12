@@ -1,9 +1,6 @@
 package com.modocache.android.group;
 
-import com.modocache.android.group.api.GroupAPIEngine;
-import com.modocache.android.group.api.GroupAPIEngine.GroupAPIEngineDelegate;
-import com.modocache.android.group.api.Post;
-import com.modocache.android.group.api.User;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.modocache.android.group.api.GroupAPIEngine;
+import com.modocache.android.group.api.GroupAPIEngine.GroupAPIEngineDelegate;
+import com.modocache.android.group.api.db.DatabaseManager;
+import com.modocache.android.group.api.models.Post;
+
 public class PostListFragment extends ListFragment implements GroupAPIEngineDelegate {
-    private Post[] posts;
+    private List<Post> posts;
 
 
     // android.support.v4.app.ListFragment Overrides
@@ -34,6 +36,7 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
     @Override
     public void onResume() {
         super.onResume();
+        onEngineDidLoadPosts();
         GroupAPIEngine.getSharedEngine().addDelegate(this);
         GroupAPIEngine.getSharedEngine().fetchPosts();
     }
@@ -41,21 +44,21 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Post post = this.posts[position];
+        Post post = this.posts.get(position);
 
         Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-        intent.putExtra(PostDetailActivity.INTENT_POST_KEY, post);
+//        intent.putExtra(PostDetailActivity.INTENT_POST_KEY, post);
         startActivity(intent);
     }
 
 
     // GroupAPIEngineDelegate Interface Methods
     @Override
-    public void onEngineDidLoadPosts(Post[] posts) {
-        this.posts = posts;
+    public void onEngineDidLoadPosts() {
+        this.posts = DatabaseManager.getSharedManager().getAllPosts();
         setListAdapter(new ArrayAdapter<Post>(getActivity(),
                                               android.R.layout.simple_list_item_1,
-                                              posts));
+                                              this.posts));
     }
 
     @Override
@@ -66,5 +69,5 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
     }
 
     @Override
-    public void onEngineDidLoadUsers(User[] users) {}
+    public void onEngineDidLoadUsers() {}
 }

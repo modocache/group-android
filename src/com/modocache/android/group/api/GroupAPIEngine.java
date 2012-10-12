@@ -27,11 +27,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.modocache.android.group.api.db.DatabaseManager;
+import com.modocache.android.group.api.models.Post;
+import com.modocache.android.group.api.models.User;
+
 public class GroupAPIEngine {
 
     public interface GroupAPIEngineDelegate {
-        public void onEngineDidLoadPosts(Post[] posts);
-        public void onEngineDidLoadUsers(User[] users);
+        public void onEngineDidLoadPosts();
+        public void onEngineDidLoadUsers();
         public void onEngineError(Error error);
     }
 
@@ -60,7 +64,7 @@ public class GroupAPIEngine {
         }
         return sharedEngine;
     }
-    
+
     public void addDelegate(GroupAPIEngineDelegate delegate) {
         this.delegates.add(delegate);
     }
@@ -188,14 +192,13 @@ public class GroupAPIEngine {
             try {
                 JSONObject resultObject = new JSONObject(result);
                 JSONArray postsJSONArray = resultObject.getJSONArray("posts");
-                Post[] posts = new Post[postsJSONArray.length()];
                 for (int i = 0; i < postsJSONArray.length(); i++) {
                     Post post = new Post(postsJSONArray.getJSONObject(i));
-                    posts[i] = post;
+                    DatabaseManager.getSharedManager().addOrUpdatePost(post);
                 }
 
                 for (GroupAPIEngineDelegate delegate : delegates) {
-                    delegate.onEngineDidLoadPosts(posts);
+                    delegate.onEngineDidLoadPosts();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -218,14 +221,13 @@ public class GroupAPIEngine {
             try {
                 JSONObject resultObject = new JSONObject(result);
                 JSONArray usersJSONArray = resultObject.getJSONArray("users");
-                User[] users = new User[usersJSONArray.length()];
                 for (int i = 0; i < usersJSONArray.length(); i++) {
                     User user = new User(usersJSONArray.getJSONObject(i));
-                    users[i] = user;
+                    DatabaseManager.getSharedManager().addOrUpdateUser(user);
                 }
 
                 for (GroupAPIEngineDelegate delegate : delegates) {
-                    delegate.onEngineDidLoadUsers(users);
+                    delegate.onEngineDidLoadUsers();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

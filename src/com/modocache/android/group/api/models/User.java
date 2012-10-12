@@ -28,9 +28,17 @@ public class User extends BaseModel {
     private ForeignCollection<Post> posts;
 
 
+    // java.lang.Object Overrides
+    @Override
+    public String toString() {
+        return this.getEmail() + ", " + Integer.toString(this.getId()) + ", " + this.getUuid();
+    }
+
+
     // Public Interface
     public User() {}
     public User(JSONObject jsonObject) {
+        super();
         this.uuid = getStringAttribute(jsonObject, "id", "");
         this.email = getStringAttribute(jsonObject, "email", "");
         this.createdAt = getStringAttribute(jsonObject, "created_at", "");

@@ -122,7 +122,7 @@ public class GroupAPIEngine {
                 Bundle bundle = result.getResult();
                 Intent intent = (Intent) bundle.get(AccountManager.KEY_INTENT);
                 if (intent != null) {
-                    currentActivity.startActivity(intent);
+                    GroupAPIEngine.this.currentActivity.startActivity(intent);
                 } else {
                     onGetAuthToken(bundle);
                 }
@@ -173,7 +173,7 @@ public class GroupAPIEngine {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            currentCallback.onAuthenticationComplete(result);
+            GroupAPIEngine.this.currentCallback.onAuthenticationComplete(result);
         }
     }
 
@@ -197,7 +197,7 @@ public class GroupAPIEngine {
                     DatabaseManager.getSharedManager().addOrUpdatePost(post);
                 }
 
-                for (GroupAPIEngineDelegate delegate : delegates) {
+                for (GroupAPIEngineDelegate delegate : GroupAPIEngine.this.delegates) {
                     delegate.onEngineDidLoadPosts();
                 }
             } catch (Exception e) {
@@ -226,7 +226,7 @@ public class GroupAPIEngine {
                     DatabaseManager.getSharedManager().addOrUpdateUser(user);
                 }
 
-                for (GroupAPIEngineDelegate delegate : delegates) {
+                for (GroupAPIEngineDelegate delegate : GroupAPIEngine.this.delegates) {
                     delegate.onEngineDidLoadUsers();
                 }
             } catch (Exception e) {
@@ -255,7 +255,7 @@ public class GroupAPIEngine {
                 }
             } else {
                 Error error = new Error("Could not access resource.");
-                for (GroupAPIEngineDelegate delegate : delegates) {
+                for (GroupAPIEngineDelegate delegate : this.delegates) {
                     delegate.onEngineError(error);
                 }
             }

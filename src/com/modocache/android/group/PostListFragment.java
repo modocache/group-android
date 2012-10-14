@@ -47,7 +47,7 @@ public class PostListFragment extends ListFragment implements GroupAPIEngineDele
         Post post = this.posts.get(position);
 
         Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-//        intent.putExtra(PostDetailActivity.INTENT_POST_KEY, post);
+        intent.putExtra(PostDetailActivity.INTENT_POST_UUID_KEY, post.getUuid());
         startActivity(intent);
     }
 

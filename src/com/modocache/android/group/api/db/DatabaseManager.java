@@ -22,11 +22,11 @@ public class DatabaseManager {
 
     private final DatabaseHelper databaseHelper;
     private DatabaseManager(Context context) {
-        databaseHelper = new DatabaseHelper(context);
+        this.databaseHelper = new DatabaseHelper(context);
     }
 
     private DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
+        return this.databaseHelper;
     }
 
 
@@ -41,29 +41,10 @@ public class DatabaseManager {
         return users;
     }
 
-    public User getUserWithId(int id) {
-        User user = null;
-        try {
-            user = getDatabaseHelper().getUserDao().queryForId(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
     public User getUserWithUuid(String uuid) {
-        if (uuid == null || uuid.equalsIgnoreCase("")) {
-            return null;
-        }
-
         User user = null;
         try {
-            List<User> users = getDatabaseHelper().getUserDao().queryForEq("uuid", uuid);
-            if (users.isEmpty()) {
-                return null;
-            } else {
-                return users.get(0);
-            }
+            user = getDatabaseHelper().getUserDao().queryForId(uuid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,8 +68,7 @@ public class DatabaseManager {
     }
 
     public User addOrUpdateUser(User user) {
-        User persistedUser = getUserWithUuid(user.getUuid());
-        if (persistedUser == null) {
+        if (getUserWithUuid(user.getUuid()) == null) {
             addUser(user);
         } else {
             updateUser(user);
@@ -107,29 +87,10 @@ public class DatabaseManager {
         return posts;
     }
 
-    public Post getPostWithId(int id) {
-        Post post = null;
-        try {
-            post = getDatabaseHelper().getPostDao().queryForId(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return post;
-    }
-
     public Post getPostWithUuid(String uuid) {
-        if (uuid == null || uuid.equalsIgnoreCase("")) {
-            return null;
-        }
-
         Post post = null;
         try {
-            List<Post> posts = getDatabaseHelper().getPostDao().queryForEq("uuid", uuid);
-            if (posts.isEmpty()) {
-                return null;
-            } else {
-                return posts.get(0);
-            }
+            post = getDatabaseHelper().getPostDao().queryForId(uuid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -153,8 +114,7 @@ public class DatabaseManager {
     }
 
     public Post addOrUpdatePost(Post post) {
-        Post persistedPost = getPostWithUuid(post.getUuid());
-        if (persistedPost == null) {
+        if (getPostWithUuid(post.getUuid()) == null) {
             addPost(post);
         } else {
             updatePost(post);
@@ -162,4 +122,6 @@ public class DatabaseManager {
 
         return post;
     }
+
+
 }

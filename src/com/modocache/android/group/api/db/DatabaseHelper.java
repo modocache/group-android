@@ -17,8 +17,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "GroupDB.sqlite";
     private static final int DATABASE_VERSION = 1;
 
-    private Dao<User, Integer> userDao = null;
-    private Dao<Post, Integer> postDao = null;
+    private Dao<User, String> userDao = null;
+    private Dao<Post, String> postDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,25 +47,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     // Public Interface
-    public Dao<User, Integer> getUserDao() {
-        if (userDao == null) {
+    public Dao<User, String> getUserDao() {
+        if (this.userDao == null) {
             try {
-                userDao = getDao(User.class);
+                this.userDao = getDao(User.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return userDao;
+        return this.userDao;
     }
 
-    public Dao<Post, Integer> getPostDao() {
-        if (postDao == null) {
+    public Dao<Post, String> getPostDao() {
+        if (this.postDao == null) {
             try {
-                postDao = getDao(Post.class);
+                this.postDao = getDao(Post.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return postDao;
+        return this.postDao;
     }
 }

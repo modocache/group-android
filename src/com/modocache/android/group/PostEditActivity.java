@@ -11,10 +11,12 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.modocache.android.group.api.db.DatabaseManager;
+import com.modocache.android.group.api.models.Post;
 
 public class PostEditActivity extends SherlockActivity {
 
-    public static final String INTENT_POST_KEY = "INTENT_POST_KEY";
+    public static final String INTENT_POST_UUID_KEY = "INTENT_POST_UUID_KEY";
     private static final int MENU_SAVE_POST_ITEM_ID = 1;
     private EditText titleEditText;
     private EditText bodyEditText;
@@ -29,14 +31,15 @@ public class PostEditActivity extends SherlockActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        titleEditText = (EditText) findViewById(R.id.edit_text_title);
-        bodyEditText = (EditText) findViewById(R.id.edit_text_body);
+        this.titleEditText = (EditText) findViewById(R.id.edit_text_title);
+        this.bodyEditText = (EditText) findViewById(R.id.edit_text_body);
 
-//        Post post = (Post) this.getIntent().getParcelableExtra(INTENT_POST_KEY);
-//        if (post != null) {
-//            titleEditText.setText(post.getTitle());
-//            bodyEditText.setText(post.getBody());
-//        }
+        String postUuid = this.getIntent().getStringExtra(INTENT_POST_UUID_KEY);
+        Post post = DatabaseManager.getSharedManager().getPostWithUuid(postUuid);
+        if (post != null) {
+            this.titleEditText.setText(post.getTitle());
+            this.bodyEditText.setText(post.getBody());
+        }
     }
 
     @Override
@@ -80,10 +83,10 @@ public class PostEditActivity extends SherlockActivity {
     // Private Interface
     private ArrayList<String> getValidationErrors() {
         ArrayList<String> errors = new ArrayList<String>();
-        if (titleEditText.length() <= 0) {
+        if (this.titleEditText.length() <= 0) {
             errors.add(getString(R.string.post_validation_error_no_title));
         }
-        if (bodyEditText.length() <= 0) {
+        if (this.bodyEditText.length() <= 0) {
             errors.add(getString(R.string.post_validation_error_no_body));
         }
         return errors;

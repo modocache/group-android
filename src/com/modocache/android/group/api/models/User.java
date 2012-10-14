@@ -12,10 +12,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
 public class User extends BaseModel {
-    @DatabaseField(generatedId=true)
-    private int id;
-
-    @DatabaseField(index=true)
+    @DatabaseField(id=true, index=true)
     private String uuid;
     @DatabaseField
     private String email;
@@ -31,25 +28,17 @@ public class User extends BaseModel {
     // java.lang.Object Overrides
     @Override
     public String toString() {
-        return this.getEmail() + ", " + Integer.toString(this.getId()) + ", " + this.getUuid();
+        return this.getEmail();
     }
 
 
     // Public Interface
     public User() {}
     public User(JSONObject jsonObject) {
-        super();
-        this.uuid = getStringAttribute(jsonObject, "id", "");
-        this.email = getStringAttribute(jsonObject, "email", "");
-        this.createdAt = getStringAttribute(jsonObject, "created_at", "");
-        this.updatedAt = getStringAttribute(jsonObject, "updated_at", "");
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    public int getId() {
-        return this.id;
+        this.setUuid(getStringAttribute(jsonObject, "id", ""));
+        this.setEmail(getStringAttribute(jsonObject, "email", ""));
+        this.setCreatedAt(getStringAttribute(jsonObject, "created_at", ""));
+        this.setUpdatedAt(getStringAttribute(jsonObject, "updated_at", ""));
     }
 
     public void setUuid(String uuid) {
